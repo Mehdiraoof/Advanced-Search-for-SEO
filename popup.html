@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Search for SEOs</title>
+  <style>
+    /* Color variables for light and dark modes */
+    :root {
+      --bg-color: #f9f6ff;
+      --text-color: #333;
+      --accent: #7e3ff2;
+      --border-color: #a27bdc;
+      --block-bg: #eee5ff;
+    }
+
+    body.dark {
+      --bg-color: #1f1f2f;
+      --text-color: #f0f0f0;
+      --accent: #bb86fc;
+      --border-color: #9a67ea;
+      --block-bg: #2c2c3c;
+    }
+
+    /* General body styling */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark mode */
+      padding: 16px;
+      width: 320px; /* Fixed width for the popup */
+      margin: 0; /* Remove default body margin */
+    }
+
+    /* Top row for title and dark mode toggle */
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .top-row h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    /* Textarea styling */
+    #searchTextInput {
+      width: calc(100% - 20px); /* Adjust for padding */
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--block-bg);
+      color: var(--text-color);
+      font-size: 14px;
+      resize: vertical; /* Allow vertical resizing */
+      box-sizing: border-box; /* Include padding in width */
+    }
+
+    #searchTextInput::placeholder {
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    /* File input styling */
+    #fileInput {
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 13px;
+      color: var(--text-color);
+    }
+
+    /* Button styling */
+    .main-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px; /* Space between buttons */
+      margin-bottom: 15px;
+    }
+
+    button {
+      flex: 1; /* Distribute space equally */
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--accent);
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      white-space: nowrap; /* Prevent text wrapping */
+    }
+
+    button:hover {
+      background-color: #6a34cc; /* Slightly darker accent on hover */
+    }
+
+    /* Clear all button specific styling */
+    #clearAllBtn {
+        background-color: #dc3545; /* Red color for clear button */
+        margin-top: 10px; /* Space from other buttons */
+        width: 100%;
+        flex: none; /* Override flex: 1 for this button */
+    }
+
+    #clearAllBtn:hover {
+        background-color: #c82333; /* Darker red on hover */
+    }
+
+    /* Results section styling */
+    #results {
+      background-color: var(--block-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      min-height: 100px; /* Ensure visibility even with no results */
+      margin-top: 15px;
+    }
+
+    #results h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    #results pre {
+      white-space: pre-wrap; /* Preserve whitespace and wrap text */
+      word-break: break-all; /* Break long words */
+      max-height: 150px; /* Limit height of results display */
+      overflow-y: auto; /* Scroll if content exceeds height */
+      font-size: 13px;
+      background-color: var(--bg-color); /* Lighter background for code/text blocks */
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+    }
+
+    /* Action buttons within results section */
+    .action-buttons {
+        text-align: right;
+        margin-bottom: 10px;
+    }
+
+    .action-buttons button {
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 5px;
+        flex: none; /* Do not stretch in this context */
+        width: auto;
+        display: inline-block; /* Allow multiple buttons on one line */
+    }
+
+    /* Dark mode toggle styling */
+    .dark-toggle {
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--accent);
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .dark-toggle:hover {
+        background-color: var(--accent);
+        color: white;
+    }
+
+    /* Styling for info/error messages */
+    p {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    p[style*="color:red"] {
+        font-weight: bold;
+    }
+
+    /* Styling for highlighted text */
+    .seo-highlight {
+      background-color: #ffde5c; /* A visible highlight color */
+      color: #333; /* Ensure text is readable */
+      font-weight: bold;
+      padding: 1px 0;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-row">
+    <h3>Advanced Search for SEOs</h3>
+    <div class="dark-toggle" id="darkToggle" type="button">Dark Mode</div>
+  </div>
+
+  <textarea id="searchTextInput" placeholder="Paste keywords or URLs (one per line) for on-page search OR file comparison..."></textarea>
+  
+  <input type="file" id="fileInput" accept=".csv, .xlsx, .docx">
+  
+  <div class="main-buttons">
+    <button id="findOnPageBtn" type="button">Find on Current Page</button>
+    <button id="compareFileBtn" type="button">Compare with File</button>
+  </div>
+  
+  <button id="clearAllBtn" type="button">Clear All</button>
+
+  <div id="results">
+    <p>Select an action above to get started.</p>
+  </div>
+
+  <script src="xlsx.full.min.js"></script>
+  <script src="mammoth.browser.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
